@@ -1,4 +1,4 @@
-package main.java.com.PTKaBC;
+package com.PTKaBC;
 /*
  * @authors: Seb White, Benji Cresswell
  * @year: 2023

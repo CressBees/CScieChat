@@ -14,8 +14,13 @@ public class Main {
 
         //prints IP
         try {
-            System.out.println("Ip: " + InetAddress.getLocalHost().getHostAddress());
-        } catch (UnknownHostException e) {
+            System.out.println("Local IP: " + InetAddress.getLocalHost().getHostAddress());
+
+            URL myIP = new URL("http://checkip.amazonaws.com");
+            BufferedReader in = new BufferedReader(new InputStreamReader(myIP.openStream()));
+            String globalIP = in.readLine(); //you get the IP as a String
+            System.out.println("Public IP: " + globalIP);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 

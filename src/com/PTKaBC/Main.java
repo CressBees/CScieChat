@@ -5,14 +5,21 @@ package com.PTKaBC;
  * This is the main class of the project.
  */
 
-import java.io.*;
-import java.net.*;
+import java.io.*; // Data streams
+import java.net.*; // Sockets
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Debug_StartUp");
 
-            //makes a listener on a port
+        //prints IP
+        try {
+            System.out.println("Ip: " + InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        //makes a listener on a port
         try {
             ServerSocket listenOn = new ServerSocket(26666);
             Socket mainSocket = listenOn.accept();
@@ -25,6 +32,5 @@ public class Main {
         catch (Exception e) {
             System.out.println("Debug_ListenerCreationError"+e);
         }
-
     }
 }

@@ -58,13 +58,16 @@ public class Main {
         }
 
         // Make a listener on a port
+
         try {
             ServerSocket listenOn = new ServerSocket(26666);
-            Socket mainSocket = listenOn.accept();
-            DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
-            String message = readFromListenOn.readUTF();
-            System.out.println("Message: " + message);
-            listenOn.close();
+            while(true) {
+                Socket mainSocket = listenOn.accept();
+                DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
+                String message = readFromListenOn.readUTF();
+                System.out.println("Message: " + message);
+                //listenOn.close();
+            }
         }
         catch (Exception e) {
             System.out.println(e);

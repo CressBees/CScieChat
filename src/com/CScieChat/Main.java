@@ -1,4 +1,4 @@
-package com.PTKaBC;
+package com.CScieChat;
 /*
  * @authors: Seb White, Benji Cresswell
  * @year: 2023

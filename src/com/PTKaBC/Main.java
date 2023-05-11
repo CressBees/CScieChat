@@ -17,7 +17,7 @@ import java.sql.Statement;
 
 public class Main {
     public static void main(String[] args) {
-
+        boolean serverClosed = false;
         try {
             /*
              * Create a connection to a local database file using SQLite
@@ -58,15 +58,15 @@ public class Main {
         }
 
         // Make a listener on a port
-
+        //this is the loop that receives and sends messages
         try {
             ServerSocket listenOn = new ServerSocket(26666);
-            while(true) {
+            while(serverClosed == false) {
                 Socket mainSocket = listenOn.accept();
                 DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
                 String message = readFromListenOn.readUTF();
                 System.out.println("Message: " + message);
-                //listenOn.close();
+                listenOn.close();
             }
         }
         catch (Exception e) {

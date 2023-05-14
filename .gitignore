@@ -25,6 +25,5 @@ hs_err_pid*
 
 CScieChat.db
 
+.idea/discord.xml
 .idea/workspace.xml
-
-.idea/

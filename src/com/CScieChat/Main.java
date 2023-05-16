@@ -33,7 +33,7 @@ public class Main {
              */
             String sql = "CREATE TABLE IF NOT EXISTS messages (unixTime INTEGER PRIMARY KEY, message STRING)";
             String sql2 = "CREATE TABLE IF NOT EXISTS users (username STRING, pass STRING)";
-            // Execute the SQL and close the file
+            // Execute the SQL and close the file (would close the connection if it was connected to MySQL or something similar, however SQLite is file based)
             statement.executeUpdate(sql);
             statement.executeUpdate(sql2);
             statement.close();
@@ -45,12 +45,12 @@ public class Main {
         // Prints IP
         try {
             // Get local IP
-            System.out.println("Local IP: " + InetAddress.getLocalHost().getHostAddress());
+            System.out.println("Local IP: " + InetAddress.getLocalHost().getHostAddress()); // Gets the private IP (the one your device is assigned on the network)
 
             // Get public IP
-            URL myIP = new URL("https://checkip.amazonaws.com");
-            BufferedReader in = new BufferedReader(new InputStreamReader(myIP.openStream()));
-            String globalIP = in.readLine(); //you get the IP as a String
+            URL myIP = new URL("https://checkip.amazonaws.com"); // set a URL variable
+            BufferedReader in = new BufferedReader(new InputStreamReader(myIP.openStream())); // Send a request to the URL
+            String globalIP = in.readLine(); // Get the IP as a string
             System.out.println("Public IP: " + globalIP);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -59,13 +59,15 @@ public class Main {
         // Make a listener on a port
         // this is the loop that receives and sends messages
         try {
-            ServerSocket listenOn = new ServerSocket(26666);
-            while(!serverClosed) {
-                Socket mainSocket = listenOn.accept();
-                DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
-                String message = readFromListenOn.readUTF();
+            ServerSocket listenOn = new ServerSocket(26666); // Create a socket with the selected port
+            while(!serverClosed) { // While the server has not been closed
+                Socket mainSocket = listenOn.accept(); // Open the connection(?)
+                DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream()); // Listen for a message(?)
+                String message = readFromListenOn.readUTF(); // Store the message to a string
                 System.out.println("Message: " + message);
-                serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close"); // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
+                // This checks the message and sets the serverClosed to true if thr server should be closed.
+                // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
+                serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close");
                 if(serverClosed) {System.out.println("closing server");}
             }
             listenOn.close();

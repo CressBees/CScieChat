@@ -14,7 +14,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 public class Main {
     public static void main(String[] args) {
         boolean serverClosed = false;
@@ -49,7 +48,7 @@ public class Main {
             System.out.println("Local IP: " + InetAddress.getLocalHost().getHostAddress());
 
             // Get public IP
-            URL myIP = new URL("http://checkip.amazonaws.com");
+            URL myIP = new URL("https://checkip.amazonaws.com");
             BufferedReader in = new BufferedReader(new InputStreamReader(myIP.openStream()));
             String globalIP = in.readLine(); //you get the IP as a String
             System.out.println("Public IP: " + globalIP);
@@ -58,16 +57,18 @@ public class Main {
         }
 
         // Make a listener on a port
-        //this is the loop that receives and sends messages
+        // this is the loop that receives and sends messages
         try {
             ServerSocket listenOn = new ServerSocket(26666);
-            while(serverClosed == false) {
+            while(!serverClosed) {
                 Socket mainSocket = listenOn.accept();
                 DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
                 String message = readFromListenOn.readUTF();
                 System.out.println("Message: " + message);
-                listenOn.close();
+                serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close"); // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
+                if(serverClosed) {System.out.println("closing server");}
             }
+            listenOn.close();
         }
         catch (Exception e) {
             System.out.println(e);

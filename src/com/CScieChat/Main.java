@@ -68,8 +68,8 @@ public class Main {
                 // This checks the message and sets the serverClosed to true if thr server should be closed.
                 // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
                 serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close");
-                if(serverClosed) {System.out.println("closing server");}
             }
+            System.out.println("closing server");
             listenOn.close();
         }
         catch (Exception e) {

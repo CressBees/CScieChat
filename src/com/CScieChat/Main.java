@@ -5,6 +5,7 @@ package com.CScieChat;
  * This is the main class of the project.
  */
 
+// Java I/O and networking imports
 import java.io.*; // Data streams
 import java.net.*; // Sockets
 
@@ -33,7 +34,8 @@ public class Main {
              */
             String sql = "CREATE TABLE IF NOT EXISTS messages (unixTime INTEGER PRIMARY KEY, message STRING)";
             String sql2 = "CREATE TABLE IF NOT EXISTS users (username STRING, pass STRING)";
-            // Execute the SQL and close the file (would close the connection if it was connected to MySQL or something similar, however SQLite is file based)
+            // Execute the SQL and close the file
+            // (would close the connection if it was connected to MySQL or something similar, however SQLite is file based)
             statement.executeUpdate(sql);
             statement.executeUpdate(sql2);
             statement.close();
@@ -55,6 +57,7 @@ public class Main {
             String globalIP = in.readLine(); // Get the IP as a string
             System.out.println("Public IP: " + globalIP + "\n");
         } catch (UnknownHostException e) {
+            //
             if(privateIpShown) {
                 System.out.println("Your public IP could not be determined, there are multiple reasons why this could happen.\n1. You are offline\n2. The server we request to is offline\n3. Some of your network settings could be causing issues\n4. Your IP may be blocked by the server we request to.\nEven though your public IP could not be determined the ser will still run.\nThis just means you won't be able to connect outside of your network.");
             } else {
@@ -67,17 +70,23 @@ public class Main {
         // Make a listener on a port
         // this is the loop that receives and sends messages
         try {
-            ServerSocket listenOn = new ServerSocket(26666); // Create a socket with the selected port
-            while(!serverClosed) { // While the server has not been closed
-                Socket mainSocket = listenOn.accept(); // Open the connection(?)
-                DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream()); // Listen for a message(?)
-                String message = readFromListenOn.readUTF(); // Store the message to a string
+            // Create a socket with the selected port
+            ServerSocket listenOn = new ServerSocket(26666);
+            // While the server has not been closed
+            while(!serverClosed) {
+                // Open the connection(?)
+                Socket mainSocket = listenOn.accept();
+                // Listen for a message(?)
+                DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
+                // Store the message and print it out
+                String message = readFromListenOn.readUTF();
                 System.out.println("Message: " + message);
                 // This checks the message and sets the serverClosed to true if thr server should be closed.
                 // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
                 serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close");
             }
             System.out.println("closing server");
+            // Close the server
             listenOn.close();
         }
         catch (Exception e) {

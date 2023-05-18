@@ -15,6 +15,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+// Internal
+
+
 public class Main {
     public static void main(String[] args) {
         boolean serverClosed = false;
@@ -32,7 +35,7 @@ public class Main {
              * INTEGER and STRING are data types, similar to the same ones used in Java already
              * PRIMARY KEY refers to the primary key of a table, this can be used as a foreign key in other tables to refer to that table.
              */
-            String sql = "CREATE TABLE IF NOT EXISTS messages (unixTime INTEGER PRIMARY KEY, message STRING)";
+            String sql = "CREATE TABLE IF NOT EXISTS messages (unixTime INTEGER PRIMARY KEY, handler STRING)";
             String sql2 = "CREATE TABLE IF NOT EXISTS users (username STRING, pass STRING)";
             // Execute the SQL and close the file
             // (would close the connection if it was connected to MySQL or something similar, however SQLite is file based)
@@ -76,12 +79,16 @@ public class Main {
             while(!serverClosed) {
                 // Open the connection(?)
                 Socket mainSocket = listenOn.accept();
-                // Listen for a message(?)
+                // Listen for a handler(?)
                 DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
-                // Store the message and print it out
+                // Store the handler and print it out
                 String message = readFromListenOn.readUTF();
                 System.out.println("Message: " + message);
-                // This checks the message and sets the serverClosed to true if thr server should be closed.
+
+                //TODO: broadcasts handler to all clients
+                com.CScieChat.handler.message.broadcastMessage(message);
+
+                // This checks the handler and sets the serverClosed to true if thr server should be closed.
                 // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
                 serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close");
             }
@@ -89,9 +96,11 @@ public class Main {
             // Close the server
             listenOn.close();
         }
+        //something has broken
         catch (Exception e) {
             System.out.println("Error: Something has gone wrong");
             System.out.println(e);
         }
+
     }
 }

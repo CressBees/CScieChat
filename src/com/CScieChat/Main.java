@@ -75,6 +75,7 @@ public class Main {
         try {
             // Create a socket with the selected port
             ServerSocket listenOn = new ServerSocket(26695);
+
             // While the server has not been closed
             while(!serverClosed) {
                 // Open the connection(?)
@@ -86,8 +87,13 @@ public class Main {
                 System.out.println("Message: " + message);
 
                 //TODO: broadcasts handler to all clients
-                com.CScieChat.handler.message.broadcastMessage(message);
-
+                //If it successfully sends the message, will return true, else, false
+                if(com.CScieChat.handler.message.broadcastMessage(message) == true) {
+                    System.out.println("Debug_MessageSent");
+                } else{
+                    //Message was not sent
+                    System.out.println("Debug_MessageFailed");
+                }
                 // This checks the handler and sets the serverClosed to true if thr server should be closed.
                 // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
                 serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close");
@@ -101,6 +107,5 @@ public class Main {
             System.out.println("Error: Something has gone wrong");
             System.out.println(e);
         }
-
     }
 }

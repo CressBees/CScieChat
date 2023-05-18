@@ -74,7 +74,7 @@ public class Main {
         // this is the loop that receives and sends messages
         try {
             // Create a socket with the selected port
-            ServerSocket listenOn = new ServerSocket(26666);
+            ServerSocket listenOn = new ServerSocket(26695);
             // While the server has not been closed
             while(!serverClosed) {
                 // Open the connection(?)

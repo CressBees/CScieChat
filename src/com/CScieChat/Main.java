@@ -15,10 +15,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-// Internal
+// Util
+import java.util.List;
+import java.util.ArrayList;
 
+// Internal
+//there used to be an import here, maybe this has broken something?????
 
 public class Main {
+    private static List<String> clientIPs = new ArrayList<>();
     public static void main(String[] args) {
         boolean serverClosed = false;
         try {
@@ -46,14 +51,12 @@ public class Main {
         } catch (SQLException e) {
             System.out.println(e);
         }
-
         boolean privateIpShown = false;
         // Prints IP
         try {
             // Get local IP
             System.out.println("Local IP: " + InetAddress.getLocalHost().getHostAddress()); // Gets the private IP (the one your device is assigned on the network)
             privateIpShown = true;
-
             // Get public IP
             URL myIP = new URL("https://checkip.amazonaws.com"); // set a URL variable
             BufferedReader in = new BufferedReader(new InputStreamReader(myIP.openStream())); // Send a request to the URL
@@ -69,13 +72,11 @@ public class Main {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
         // Make a listener on a port
         // this is the loop that receives and sends messages
         try {
             // Create a socket with the selected port
             ServerSocket listenOn = new ServerSocket(26695);
-
             // While the server has not been closed
             while(!serverClosed) {
                 // Open the connection(?)
@@ -85,6 +86,7 @@ public class Main {
                 // Store the handler and print it out
                 String message = readFromListenOn.readUTF();
                 System.out.println("Message: " + message);
+
 
                 //TODO: broadcasts handler to all clients
                 //If it successfully sends the message, will return true, else, false
@@ -107,5 +109,8 @@ public class Main {
             System.out.println("Error: Something has gone wrong");
             System.out.println(e);
         }
+    }
+    private static void addClientIPToList(){
+
     }
 }

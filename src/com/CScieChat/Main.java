@@ -86,7 +86,8 @@ public class Main {
                 // Store the handler and print it out
                 String message = readFromListenOn.readUTF();
                 System.out.println("Message: " + message);
-
+                String clientIP = addClientIPToList(mainSocket);
+                System.out.println(clientIP);
 
                 //TODO: broadcasts handler to all clients
                 //If it successfully sends the message, will return true, else, false
@@ -110,7 +111,9 @@ public class Main {
             System.out.println(e);
         }
     }
-    private static void addClientIPToList(){
 
+    //adds client IPs to a list
+    private static String addClientIPToList(Socket socket){ // feed the socket into the method
+        return socket.getRemoteSocketAddress().toString().replace("/", ""); //get the IP from the socket, for some reason a / appears at the start so remove as well
     }
 }

@@ -6,6 +6,8 @@ package com.CScieChat;
  */
 
 // Java I/O and networking imports
+import com.CScieChat.handler.Message;
+
 import java.io.*; // Data streams
 import java.net.*; // Sockets
 
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 // Internal
-//there used to be an import here, maybe this has broken something?????
+
 
 public class Main {
     private static List<String> clientIPs = new ArrayList<>();
@@ -85,18 +87,12 @@ public class Main {
                 DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
                 // Store the handler and print it out
                 String message = readFromListenOn.readUTF();
-                System.out.println("Message: " + message);
+
+                Message.handleMessage(message); // call handleMessage in the Message class
+
                 String clientIP = addClientIPToList(mainSocket);
                 System.out.println(clientIP);
 
-                //TODO: broadcasts handler to all clients
-                //If it successfully sends the message, will return true, else, false
-                if(com.CScieChat.handler.message.broadcastMessage(message) == true) {
-                    System.out.println("Debug_MessageSent");
-                } else{
-                    //Message was not sent
-                    System.out.println("Debug_MessageFailed");
-                }
                 // This checks the handler and sets the serverClosed to true if thr server should be closed.
                 // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
                 serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close");

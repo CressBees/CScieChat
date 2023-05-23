@@ -75,7 +75,7 @@ public class Main {
 
                 Message.handleMessage(message); // call handleMessage in the Message class
 
-                String clientIP = addClientIPToList(mainSocket);
+                String clientIP = getClientIP(mainSocket);
                 System.out.println(clientIP);
 
                 // This checks the handler and sets the serverClosed to true if thr server should be closed.
@@ -94,7 +94,7 @@ public class Main {
     }
 
     //adds client IPs to a list
-    private static String addClientIPToList(Socket socket){ // feed the socket into the method
+    private static String getClientIP(Socket socket){ // feed the socket into the method
         return socket.getRemoteSocketAddress().toString().replace("/", ""); //get the IP from the socket, for some reason a / appears at the start so remove as well
     }
 }

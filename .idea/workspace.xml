@@ -49,6 +49,13 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="Application" />
+      </set>
+    </option>
+  </component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.CScieChat.Main" />

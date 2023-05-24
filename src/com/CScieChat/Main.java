@@ -6,9 +6,6 @@ package com.CScieChat;
  */
 
 // Java I/O and networking imports
-import com.CScieChat.handler.Message;
-import com.CScieChat.task.ServerIP;
-
 import java.io.*; // Data streams
 import java.net.*; // Sockets
 
@@ -21,14 +18,26 @@ import java.sql.Statement;
 // Util
 import java.util.List;
 import java.util.ArrayList;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // Internal
+import com.CScieChat.handler.Message;
+import com.CScieChat.task.ServerIP;
 
 
 public class Main {
+    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+
     private static List<String> clientIPs = new ArrayList<>();
 
     public static void main(String[] args) {
+
+        for (String arg : args) {
+            System.out.println(arg);
+        }
+
         boolean serverClosed = false;
         try {
             /*
@@ -53,7 +62,7 @@ public class Main {
             statement.close();
             connection.close();
         } catch (SQLException e) {
-            System.out.println(e);
+            LOGGER.log(Level.SEVERE, e.toString());
         }
 
         // Prints IP
@@ -89,7 +98,7 @@ public class Main {
         //something has broken
         catch (Exception e) {
             System.out.println("Error: Something has gone wrong");
-            System.out.println(e);
+            LOGGER.log(Level.SEVERE, e.toString());
         }
     }
 

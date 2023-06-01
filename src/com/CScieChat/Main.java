@@ -19,6 +19,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.function.Supplier;
+import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +30,6 @@ import com.CScieChat.task.ServerIP;
 
 
 public class Main {
-    private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
 
     private static List<String> clientIPs = new ArrayList<>();
 
@@ -78,7 +78,6 @@ public class Main {
         //something has broken
         catch (Exception e) {
             System.out.println("Error: Something has gone wrong");
-            LOGGER.log(Level.SEVERE, e.toString());
         }
     }
 

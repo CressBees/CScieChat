@@ -49,7 +49,6 @@ public class DataBase {
             statement.close();
             connection.close();
         } catch (SQLException e) {
-            Logger LOGGER = Logger.getLogger(DataBase.class.getName());
             LOGGER.log(Level.SEVERE, e.toString());
         }
     }

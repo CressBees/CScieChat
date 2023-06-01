@@ -10,20 +10,13 @@ import java.io.*; // Data streams
 import java.net.*; // Sockets
 
 // SQL
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 // Util
 import java.util.List;
 import java.util.ArrayList;
-import java.util.function.Supplier;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 // Internal
+import com.CScieChat.handler.Client;
 import com.CScieChat.handler.Message;
 import com.CScieChat.task.DataBase;
 import com.CScieChat.task.ServerIP;
@@ -31,7 +24,7 @@ import com.CScieChat.task.ServerIP;
 
 public class Main {
 
-    private static List<String> clientIPs = new ArrayList<>();
+    private static List<Client> clients = new ArrayList<>();
 
     public static void main(String[] args) {
         DataBase dataBase = new DataBase();
@@ -81,7 +74,7 @@ public class Main {
         }
     }
 
-    //adds client IPs to a list
+    //returns client ip of socket
     private static String getClientIP(Socket socket){ // feed the socket into the method
         return socket.getRemoteSocketAddress().toString().replace("/", ""); //get the IP from the socket, for some reason a / appears at the start so remove as well
     }

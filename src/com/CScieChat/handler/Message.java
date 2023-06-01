@@ -7,10 +7,12 @@ public class Message {
             Command.runCommand(message);
         else {
             System.out.println("Message: " + message);
-
-            // TODO: broadcast message to all clients
+            broadcastMessage(message);
 
         }
-        System.out.println("Test - message recieved");
+        System.out.println("Test - message received");
+    }
+    public static void broadcastMessage(String message){
+
     }
 }

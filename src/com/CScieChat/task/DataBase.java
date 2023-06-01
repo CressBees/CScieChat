@@ -49,7 +49,7 @@ public class DataBase {
             statement.close();
             connection.close();
         } catch (SQLException e) {
-            LOGGER.log(Level.SEVERE, e.toString());
+            System.out.println("ERROR");
         }
     }
 }

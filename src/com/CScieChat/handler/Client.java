@@ -1,13 +1,16 @@
 package com.CScieChat.handler;
 
-public class Client {
+public class Client{
     //client port number
-    private int port = 0;
+    private String port = null;
     //client ip address
     private String IP = null;
 
     //Getting client info into string and port
-    public Client(String IPInput, int portInput) {
-        port = port;
+    public Client(String IPInput)
+    {
+        String[] IPAndPort = IPInput.split(":",1);
+        IP = IPAndPort[1];
+        port = IPAndPort[2];
     }
 }

@@ -61,6 +61,10 @@ public class Main {
                 String clientDetails = getClientIP(mainSocket);
                 System.out.println(clientDetails);
 
+                createClient(mainSocket);
+
+                printClientList();
+
                 // This checks the handler and sets the serverClosed to true if thr server should be closed.
                 // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
                 serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close");
@@ -78,5 +82,21 @@ public class Main {
     //returns client ip of socket
     private static String getClientIP(Socket socket){ // feed the socket into the method
          return socket.getRemoteSocketAddress().toString().replace("/", "");
+    }
+    //Method creates a client obj to put into the list
+     private static void createClient(Socket socket){
+         //gets client IP and removes the weird / that appears in the string, also gets port number
+         String clientIP = socket.getRemoteSocketAddress().toString().replace("/", "");
+         System.out.println("Debug_ClientInfo "+clientIP);
+         //makes a new client obj, and put it into the list
+         Client client = new Client(clientIP);
+         clients.add(client);
+    }
+    //prints clients and details !NOT DONE!
+    public static void printClientList(){
+        for(int i=0;i<=clients.size();i++){
+            System.out.println("client "+i);
+            //TODO: Finish this
+        }
     }
 }

@@ -8,7 +8,6 @@ public class Message {
         else {
             System.out.println("Message: " + message);
             broadcastMessage(message);
-
         }
         System.out.println("Test - message received");
     }

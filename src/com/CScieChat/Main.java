@@ -61,8 +61,10 @@ public class Main {
                 String clientDetails = getClientIP(mainSocket);
                 System.out.println(clientDetails);
 
+                // makes a client obj from the connected socket
                 createClient(mainSocket);
 
+                //prints the list of clients
                 printClientList();
 
                 // This checks the handler and sets the serverClosed to true if thr server should be closed.
@@ -89,8 +91,13 @@ public class Main {
          String clientIP = socket.getRemoteSocketAddress().toString().replace("/", "");
          System.out.println("Debug_ClientInfo "+clientIP);
          //makes a new client obj, and put it into the list
-         Client client = new Client(clientIP);
+         Client client = new Client();
+         System.out.println("Debug_ClientInfo4 "+clientIP);
+         //makes the client have IP and port assigned
+         client.clientSetup(clientIP);
+         System.out.println("Debug_ClientInfo3 "+clientIP);
          clients.add(client);
+         System.out.println("Debug_ClientInfo2 "+clientIP);
     }
     //prints clients and details !NOT DONE!
     public static void printClientList(){

@@ -7,10 +7,11 @@ public class Client{
     private String IP = null;
 
     //Getting client info into string and port
-    public Client(String IPInput)
+    public void clientSetup(String IPInput)
     {
-        String[] IPAndPort = IPInput.split(":",1);
-        IP = IPAndPort[1];
-        port = IPAndPort[2];
+        //IPInput has both IP and port, seperated by a :, this splits them and then
+        String[] IPAndPort = IPInput.split(":",0);
+        IP = IPAndPort[0];
+        port = IPAndPort[1];
     }
 }

@@ -64,12 +64,16 @@ public class Main {
                 // makes a client obj from the connected socket
                 createClient(mainSocket);
 
+                //Debug
+                System.out.println("Debug_ClientsSizeEquals "+clients.size());
                 //prints the list of clients
                 printClientList();
-
+                System.out.println("Debug_103824");
                 // This checks the handler and sets the serverClosed to true if thr server should be closed.
                 // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
-                serverClosed = message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close");
+                if(message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close")){
+                    serverClosed = true;
+                }
             }
             System.out.println("closing server");
             // Close the server
@@ -89,20 +93,19 @@ public class Main {
      private static void createClient(Socket socket){
          //gets client IP and removes the weird / that appears in the string, also gets port number
          String clientIP = socket.getRemoteSocketAddress().toString().replace("/", "");
-         System.out.println("Debug_ClientInfo "+clientIP);
          //makes a new client obj, and put it into the list
          Client client = new Client();
-         System.out.println("Debug_ClientInfo4 "+clientIP);
          //makes the client have IP and port assigned
          client.clientSetup(clientIP);
-         System.out.println("Debug_ClientInfo3 "+clientIP);
          clients.add(client);
-         System.out.println("Debug_ClientInfo2 "+clientIP);
     }
-    //prints clients and details !NOT DONE!
+    //prints clients and details !NOT DONE & BUGGED!
     public static void printClientList(){
         for(int i=0;i<=clients.size();i++){
             System.out.println("client "+i);
+            System.out.println(clients.get(i).port);
+            System.out.println(clients.get(i).IP);
+            System.out.println("Debug_ClientsListed");
             //TODO: Finish this
         }
     }

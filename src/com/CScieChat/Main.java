@@ -69,7 +69,7 @@ public class Main {
                 //prints the list of clients
                 printClientList();
                 System.out.println("Debug_103824");
-                // This checks the handler and sets the serverClosed to true if thr server should be closed.
+                // This checks the handler and sets the serverClosed to true if the server should be closed.
                 // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
                 if(message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close")){
                     serverClosed = true;
@@ -91,22 +91,43 @@ public class Main {
     }
     //Method creates a client obj to put into the list
      private static void createClient(Socket socket){
-         //gets client IP and removes the weird / that appears in the string, also gets port number
          String clientIP = socket.getRemoteSocketAddress().toString().replace("/", "");
-         //makes a new client obj, and put it into the list
+         //makes a new client obj, and put it into the list if it is not a duplicate
          Client client = new Client();
          //makes the client have IP and port assigned
          client.clientSetup(clientIP);
+
+         //checks if client is a duplicate
+         isDuplicate(client);
+
          clients.add(client);
     }
-    //prints clients and details !NOT DONE & BUGGED!
-    public static void printClientList(){
-        for(int i=0;i<=clients.size();i++){
-            System.out.println("client "+i);
-            System.out.println(clients.get(i).port);
-            System.out.println(clients.get(i).IP);
+    //checks if client is a duplicate
+    private static boolean isDuplicate(Client client){
+        for(int i=0;i<=clients.size()-1;i++){
+            if(){
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+    }
+    //prints clients and details
+    //the minus one is there because otherwise an off by one error happens.
+    public static void printClientList() {
+        for (int i = 0; i <= clients.size() - 1; i++) {
+
+            //say how big clients is
+            System.out.println("Debug_clientsSize=" + clients.size());
+
+            //print client info
+            System.out.println("client " + i);
+            System.out.println("Debug_ClientPort" + clients.get(i).port);
+            System.out.println("Debug_ClientPort" + clients.get(i).IP);
+
+            //done
             System.out.println("Debug_ClientsListed");
-            //TODO: Finish this
         }
     }
 }

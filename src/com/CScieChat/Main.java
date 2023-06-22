@@ -55,7 +55,7 @@ public class Main {
                 // Store the handler and print it out
                 String message = readFromListenOn.readUTF();
 
-                Message.handleMessage(message); // call handleMessage in the Message class
+                Message.handleMessage(message, clients); // call handleMessage in the Message class
 
                 //gets and prints client IP & port
                 String clientDetails = getClientIP(mainSocket);
@@ -97,21 +97,21 @@ public class Main {
          //makes the client have IP and port assigned
          client.clientSetup(clientIP);
 
-         //checks if client is a duplicate
-         isDuplicate(client);
+         //checks if client is a duplicate and add to list if not add it to the list.
+         if(isDuplicate(client)==false){
+             clients.add(client);
+         }
 
-         clients.add(client);
     }
     //checks if client is a duplicate
+    //It goes through the entire array of client objects and if it shares a
     private static boolean isDuplicate(Client client){
         for(int i=0;i<=clients.size()-1;i++){
-            if(){
+            if(client.IP==clients.get(i).IP && client.port == clients.get(i).port){
                 return true;
             }
-            else{
-                return false;
-            }
         }
+        return false;
     }
     //prints clients and details
     //the minus one is there because otherwise an off by one error happens.
@@ -125,7 +125,6 @@ public class Main {
             System.out.println("client " + i);
             System.out.println("Debug_ClientPort" + clients.get(i).port);
             System.out.println("Debug_ClientPort" + clients.get(i).IP);
-
             //done
             System.out.println("Debug_ClientsListed");
         }

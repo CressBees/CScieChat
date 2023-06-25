@@ -23,14 +23,13 @@ public class Message {
                 int i = 0;i<clients.size()-1;i++ //the minus one is a hack fix to prevent an off by one error.
         ){
             try {
-                Socket mySocket = new Socket("serverhost", Integer.parseInt(clients.get(i).port)); // Create a new socket
+                Socket mySocket = new Socket("serverhost", Integer.parseInt(clients.get(i).port)); // Create a new socket with current clients port
                 DataOutputStream ISay = new DataOutputStream(mySocket.getOutputStream()); // Create an output stream
                 String msg = message;
                 System.out.println("Debug_SendingMessage: " + msg);
                 ISay.writeUTF(msg); // write the message
                 ISay.flush(); // send the message
-                // Close the connection
-                ISay.close();
+                ISay.close(); // Close the connection
                 mySocket.close();
             } catch (Exception e) {
                 System.out.println("Debug_BroadcastError "+e); // Oh no an error

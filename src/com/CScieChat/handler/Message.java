@@ -32,7 +32,7 @@ public class Message {
                 ISay.close(); // Close the connection
                 mySocket.close();
             } catch (Exception e) {
-                System.out.println("Debug_BroadcastError "+e); // Oh no an error
+                System.out.println("Debug_BroadcastError "+e); // Oh no, an error
             }
         }
     }

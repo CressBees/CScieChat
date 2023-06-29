@@ -14,6 +14,7 @@ import java.net.*; // Sockets
 // Util
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
 
 // Internal
 import com.CScieChat.handler.Client;
@@ -42,7 +43,7 @@ public class Main {
         ServerIP.getIP();
 
         // Make a listener on a port
-        // this is the loop that receives and sends messages
+        // this is the loop that receives and sends messages.
         try {
             // Create a socket with the selected port
             ServerSocket listenOn = new ServerSocket(26695);
@@ -92,22 +93,22 @@ public class Main {
     //Method creates a client obj to put into the list
      private static void createClient(Socket socket){
          String clientIP = socket.getRemoteSocketAddress().toString().replace("/", "");
-         //makes a new client obj, and put it into the list if it is not a duplicate
+         //makes a new client obj, and put it into the list if it is not a duplicate.
          Client client = new Client();
          //makes the client have IP and port assigned
          client.clientSetup(clientIP);
 
          //checks if client is a duplicate and add to list if not add it to the list.
-         if(isDuplicate(client)==false){
+         if(!isDuplicate(client)){
              clients.add(client);
          }
 
     }
-    //checks if client is a duplicate
-    //It goes through the entire array of client objects and if it shares a
+    //Checks if client is a duplicate
+    //It goes through the entire array of client objects and if it shares a port no. and IP with any of the members, it doesn't get added.
     private static boolean isDuplicate(Client client){
         for(int i=0;i<=clients.size()-1;i++){
-            if(client.IP==clients.get(i).IP && client.port == clients.get(i).port){
+            if(Objects.equals(client.IP, clients.get(i).IP) && Objects.equals(client.port, clients.get(i).port)){
                 return true;
             }
         }

@@ -12,20 +12,24 @@ import java.net.*; // Sockets
 // SQL
 
 // Util
-import java.util.List;
+import java.util.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
 // Internal
 import com.CScieChat.handler.Client;
-import com.CScieChat.handler.Message;
+//import com.CScieChat.handler.Message;
 import com.CScieChat.task.DataBase;
 import com.CScieChat.task.ServerIP;
 
 
 public class Main {
 
-    private static List<Client> clients = new ArrayList<>();
+    //Is vector instead of arraylist because vectors are threadsafe
+    private static Vector<Thread> clients = new Vector<>();
+
+    //Default name for clients
+    static final String defaultName = "Anonymous";
 
     public static void main(String[] args) {
         DataBase dataBase = new DataBase();
@@ -33,7 +37,6 @@ public class Main {
         for (String arg : args) {
             System.out.println(arg);
         }
-
         boolean serverClosed = false;
 
         // Setup SQL
@@ -42,39 +45,33 @@ public class Main {
         // Prints IP
         ServerIP.getIP();
 
-        // Make a listener on a port
-        // this is the loop that receives and sends messages.
+        // this is the loop that creates and connects clients
+        // Right now it never ends
         try {
             // Create a socket with the selected port
             ServerSocket listenOn = new ServerSocket(26695);
+            System.out.println("Server Started...");
+            System.out.println("Waiting for Clients...");
             // While the server has not been closed
             while(!serverClosed) {
-                // Open the connection(?)
+                // Open the connection
                 Socket mainSocket = listenOn.accept();
-                // Listen for a handler(?)
+
+                //Print connected clients
+                System.out.println("Client Number " + clients.size()+1 + " has connected");
+
+                // Get streams (don't cross them)
                 DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
-                // Store the handler and print it out
-                String message = readFromListenOn.readUTF();
+                DataOutputStream sendFromListenOn = new DataOutputStream(mainSocket.getOutputStream());
 
-                Message.handleMessage(message, clients); // call handleMessage in the Message class
-
-                //gets and prints client IP & port
-                String clientDetails = getClientIP(mainSocket);
-                System.out.println(clientDetails);
-
-                // makes a client obj from the connected socket
-                createClient(mainSocket);
+                //make a new client
+                createClient(defaultName, mainSocket, readFromListenOn, sendFromListenOn);
 
                 //Debug
                 System.out.println("Debug_ClientsSizeEquals "+clients.size());
                 //prints the list of clients
                 printClientList();
-                System.out.println("Debug_103824");
-                // This checks the handler and sets the serverClosed to true if the server should be closed.
-                // equalsIgnoreCase has the same output as .toLowerCase.equals or .toLowercase() == "string"
-                if(message.equalsIgnoreCase("!close") || message.equalsIgnoreCase("/close")){
-                    serverClosed = true;
-                }
+                // TODO: Make this loop endable
             }
             System.out.println("closing server");
             // Close the server
@@ -90,32 +87,23 @@ public class Main {
     private static String getClientIP(Socket socket){ // feed the socket into the method
          return socket.getRemoteSocketAddress().toString().replace("/", "");
     }
-    //Method creates a client obj to put into the list
-     private static void createClient(Socket socket){
-         String clientIP = socket.getRemoteSocketAddress().toString().replace("/", "");
-         //makes a new client obj, and put it into the list if it is not a duplicate.
-         Client client = new Client();
-         //makes the client have IP and port assigned
-         client.clientSetup(clientIP);
 
-         //checks if client is a duplicate and add to list if not add it to the list.
-         if(!isDuplicate(client)){
-             clients.add(client);
-         }
+    //Make a new thread with a client
+    private static void createClient(String defaultName, Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn){
+        System.out.println("Creating new client");
 
+        //Make new client with the socket + Input & Output streams
+        Thread clientThread = new Client(defaultName, clientSocket, readFromListenOn, sendFromListenOn);
+
+        //add client to vector
+        clients.add(clientThread);
+
+        //make the thread start working
+        clientThread.start();
     }
-    //Checks if client is a duplicate
-    //It goes through the entire array of client objects and if it shares a port no. and IP with any of the members, it doesn't get added.
-    private static boolean isDuplicate(Client client){
-        for(int i=0;i<=clients.size()-1;i++){
-            if(Objects.equals(client.IP, clients.get(i).IP) && Objects.equals(client.port, clients.get(i).port)){
-                return true;
-            }
-        }
-        return false;
-    }
-    //prints clients and details
-    //the minus one is there because otherwise an off by one error happens.
+
+    //prints clients
+    // the minus one is there because otherwise an off by one error happens.
     public static void printClientList() {
         for (int i = 0; i <= clients.size() - 1; i++) {
 
@@ -124,10 +112,6 @@ public class Main {
 
             //print client info
             System.out.println("client " + i);
-            System.out.println("Debug_ClientPort" + clients.get(i).port);
-            System.out.println("Debug_ClientPort" + clients.get(i).IP);
-            //done
-            System.out.println("Debug_ClientsListed");
         }
     }
 }

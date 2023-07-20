@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class Client extends Thread {
 
-    public Client(String name, Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn){
+    public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn){
         // if client is active, it is true, when stop command, false
         boolean clientActive = true;
 
@@ -42,6 +42,10 @@ public class Client extends Thread {
                     System.out.println("Debug_MessageHidden");
                     isHidden = true;
                 }
+
+                //send the message to other clients
+                sendMessage(name, inputMessage, sendFromListenOn);
+
             } catch (EOFException eofe) {
                 System.out.println("Debug_ClientMessageEOFE");
                 //if you don't break here, it will just keep looping
@@ -55,9 +59,15 @@ public class Client extends Thread {
         }
     }
     //takes keyboard input from user and returns it as a string
-    private static String keyboardInput(){
+    private String keyboardInput(){
         Scanner messageScanner = new Scanner(System.in); // create scanner
         System.out.println("Input Message");
         return messageScanner.nextLine();
+    }
+
+    //send message to all other clients
+    //the spellcheck sees a grammar error above, but not when this comment is around, wtf
+    private void sendMessage(String name, String inputMessage, DataOutputStream sendFromListenOn){
+
     }
 }

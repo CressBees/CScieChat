@@ -57,8 +57,11 @@ public class Main {
                 // Open the connection
                 Socket mainSocket = listenOn.accept();
 
-                //Print connected clients
-                System.out.println("Client Number " + clients.size()+1 + " has connected");
+                //Print connected clients +1 is to prevent an off by one error. Computers start from 0
+                // for some reason, if I do this in the print func, it just adds a 1 onto the end of clients.size
+                // So we do it here instead
+                int clientQuantity = clients.size()+1;
+                System.out.println("Client Number " + clientQuantity + " has connected");
 
                 // Get streams (don't cross them)
                 DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());

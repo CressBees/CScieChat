@@ -1,17 +1,14 @@
 package com.CScieChat.handler;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.BufferedReader;
-import java.io.BufferedInputStream;
+import java.io.*;
 
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Client extends Thread {
 
-    public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn){
+    public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn, Vector clients){
         // if client is active, it is true, when stop command, false
         boolean clientActive = true;
 
@@ -44,7 +41,7 @@ public class Client extends Thread {
                 }
 
                 //send the message to other clients
-                sendMessage(name, inputMessage, sendFromListenOn);
+                sendMessage(name, inputMessage, readFromListenOn, clients);
 
             } catch (EOFException eofe) {
                 System.out.println("Debug_ClientMessageEOFE");
@@ -64,10 +61,9 @@ public class Client extends Thread {
         System.out.println("Input Message");
         return messageScanner.nextLine();
     }
+    private void sendMessage(String name, String inputMessage, DataInputStream readFromListenOn, Vector clients){
+        for(int i = 0; i < clients.size()+1; i++){
 
-    //send message to all other clients
-    //the spellcheck sees a grammar error above, but not when this comment is around, wtf
-    private void sendMessage(String name, String inputMessage, DataOutputStream sendFromListenOn){
-
+        }
     }
 }

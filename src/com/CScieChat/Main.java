@@ -13,8 +13,6 @@ import java.net.*; // Sockets
 
 // Util
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Objects;
 
 // Internal
 import com.CScieChat.handler.Client;
@@ -67,8 +65,11 @@ public class Main {
                 DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
                 DataOutputStream sendFromListenOn = new DataOutputStream(mainSocket.getOutputStream());
 
-                //make a new client
-                createClient(defaultName, mainSocket, readFromListenOn, sendFromListenOn);
+                //Create the message handler
+
+
+                //make a new client, default name is Anonymous
+                createClient(defaultName, mainSocket, readFromListenOn, sendFromListenOn, clients);
 
                 //Debug
                 System.out.println("Debug_ClientsSizeEquals "+clients.size());
@@ -92,14 +93,14 @@ public class Main {
     }
 
     //Make a new thread with a client
-    private static void createClient(String defaultName, Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn){
+    private static void createClient(String defaultName, Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn, Vector<Thread> clients){
         System.out.println("Creating new client");
 
         //Make new client with the socket + Input & Output streams
-        Thread clientThread = new Client(defaultName, clientSocket, readFromListenOn, sendFromListenOn);
+        Thread clientThread = new Client(defaultName, clientSocket, readFromListenOn, sendFromListenOn, clients);
 
         //add client to vector
-        clients.add(clientThread);
+        Main.clients.add(clientThread);
 
         //make the thread start working
         clientThread.start();

@@ -65,8 +65,6 @@ public class Main {
                 DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
                 DataOutputStream sendFromListenOn = new DataOutputStream(mainSocket.getOutputStream());
 
-                //Create the message handler
-
 
                 //make a new client, default name is Anonymous
                 createClient(defaultName, mainSocket, readFromListenOn, sendFromListenOn, clients);
@@ -110,7 +108,6 @@ public class Main {
     // the minus one is there because otherwise an off by one error happens.
     public static void printClientList() {
         for (int i = 0; i <= clients.size() - 1; i++) {
-
             //say how big clients is
             System.out.println("Debug_clientsSize=" + clients.size());
 

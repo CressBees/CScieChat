@@ -24,7 +24,7 @@ import com.CScieChat.task.ServerIP;
 public class Main {
 
     //Is vector instead of arraylist because vectors are threadsafe
-    private static Vector<Thread> clients = new Vector<>();
+    public static Vector<Client> clients = new Vector<>();
 
     //Default name for clients
     static final String defaultName = "Anonymous";
@@ -91,11 +91,11 @@ public class Main {
     }
 
     //Make a new thread with a client
-    private static void createClient(String defaultName, Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn, Vector<Thread> clients){
+    private static void createClient(String defaultName, Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn, Vector<Client> clients){
         System.out.println("Creating new client");
 
         //Make new client with the socket + Input & Output streams
-        Thread clientThread = new Client(defaultName, clientSocket, readFromListenOn, sendFromListenOn, clients);
+        Client clientThread = new Client(defaultName, clientSocket, readFromListenOn, sendFromListenOn, clients);
 
         //add client to vector
         Main.clients.add(clientThread);

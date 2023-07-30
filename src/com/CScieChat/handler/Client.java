@@ -8,7 +8,24 @@ import java.util.Vector;
 
 public class Client extends Thread {
 
+    public Socket socket;
+
+    // if client is active, it is true, when stop command, false
+    boolean clientActive;
+
+    //is this client an admin
+    boolean isAdmin;
+
+    //client receiving port number
+    //there should be a better way to do this with finals, but it works for now
+    int clientPort;
+
+    //Input is message server receives from client, output is one it sends to other clients
+    String inputMessage = null;
+    String outputMessage = null;
+
     public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn, Vector clients){
+
         // if client is active, it is true, when stop command, false
         boolean clientActive = true;
 
@@ -22,6 +39,9 @@ public class Client extends Thread {
         //Input is message server receives from client, output is one it sends to other clients
         String inputMessage = null;
         String outputMessage = null;
+
+        //Create socket in client
+        socket = clientSocket;
 
         //says if message is a command or not
         boolean isCommand = false;
@@ -64,6 +84,7 @@ public class Client extends Thread {
                 if (!isHidden) {
                     sendMessage(name, inputMessage, readFromListenOn, clients, clientPort);
                 }
+
             } catch (EOFException eofe) {
                 System.out.println("Debug_ClientMessageEOFE");
                 //if you don't break here, it will just keep looping
@@ -87,9 +108,10 @@ public class Client extends Thread {
     //TODO: finish this
     private void sendMessage(String name, String inputMessage, DataInputStream readFromListenOn, Vector clients, int clientPort) throws IOException {
         System.out.println("Debug_SendingMessage");
-        for(int i = 0; i < clients.size(); i++){
+        for (Object client : clients) {
 
-            DataOutputStream sender =  new DataOutputStream(.getOutputStream());
+            client.socket;
+            DataOutputStream sender = new DataOutputStream(.getOutputStream());
 
             /*
             //int port = clients[i].clientPort;

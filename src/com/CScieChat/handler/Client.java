@@ -3,6 +3,7 @@ package com.CScieChat.handler;
 import java.io.*;
 
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -24,7 +25,7 @@ public class Client extends Thread {
     String inputMessage = null;
     String outputMessage = null;
 
-    public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn, Vector clients){
+    public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn, Vector clients) throws IOException {
 
         // if client is active, it is true, when stop command, false
         boolean clientActive = true;
@@ -85,6 +86,14 @@ public class Client extends Thread {
                 System.out.println("Debug_ClientMessageEOFE");
                 //if you don't break here, it will just keep looping
                 //TODO: find better way to do this
+                break;
+            }
+            //if client unexpectedly disconnected, close
+            catch (SocketException se){
+                System.out.println("Debug_ClientDisconnectError");
+                socket.close();
+                readFromListenOn.close();
+                sendFromListenOn.close();
                 break;
             }
             catch (Exception e){

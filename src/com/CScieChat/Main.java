@@ -91,7 +91,7 @@ public class Main {
     }
 
     //Make a new thread with a client
-    private static void createClient(String defaultName, Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn, Vector<Client> clients){
+    private static void createClient(String defaultName, Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn, Vector<Client> clients) throws IOException {
         System.out.println("Creating new client");
 
         //Make new client with the socket + Input & Output streams

@@ -18,7 +18,7 @@ public class Client extends Thread {
 
     //client receiving port number
     //there should be a better way to do this with finals, but it works for now
-    int clientPort;
+    int clientPort = 43254143;
 
     //Input is message server receives from client, output is one it sends to other clients
     String inputMessage = null;
@@ -42,6 +42,8 @@ public class Client extends Thread {
 
         //Create socket in client
         socket = clientSocket;
+
+        int test = 12;
 
         //says if message is a command or not
         boolean isCommand = false;
@@ -73,12 +75,6 @@ public class Client extends Thread {
                     System.out.println("Debug_CommandReceived");
                     isCommand = true;
                 }
-                //initial msg will have port, get port
-                if(inputMessage.startsWith("/initial")){
-                    String[] portExtractor = inputMessage.split(":");
-                    clientPort = Integer.parseInt(portExtractor[1]);
-                    System.out.println("Debug_PortNumber== "+clientPort);
-                }
 
                 //send the message to other clients if it is not hidden
                 if (!isHidden) {
@@ -109,24 +105,11 @@ public class Client extends Thread {
     private void sendMessage(String name, String inputMessage, DataInputStream readFromListenOn, Vector clients, int clientPort) throws IOException {
         System.out.println("Debug_SendingMessage");
         for (Object client : clients) {
-
-            client.socket;
-            DataOutputStream sender = new DataOutputStream(.getOutputStream());
-
-            /*
-            //int port = clients[i].clientPort;
-            Socket mySocket = new Socket("outputhost", clientPort ); // Create a new socket with client port
-            DataOutputStream ISay = new DataOutputStream(mySocket.getOutputStream()); // Create an output stream
-
-            System.out.println("Sending: " + inputMessage);
-
-            ISay.writeUTF(inputMessage); // write the message
-            ISay.flush(); // send the message
-
-            // close the connections
-            mySocket.close();
-            ISay.close();
-            */
+            DataOutputStream sender = new DataOutputStream(this.socket.getOutputStream());
+            sender.writeUTF(name+" Says: "+inputMessage);
+            sender.flush();
+            System.out.println("Debug_SendMessage");
         }
+        System.out.println("Debug_BroadcastComplete");
     }
 }

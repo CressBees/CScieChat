@@ -53,6 +53,8 @@ public class Client extends Thread {
         // true = yes, false = no
         boolean isHidden;
 
+        System.out.println("Debug_ClientRunning");
+
         //This loop handles sending and receiving messages from each client
         while(clientActive) {
             isHidden = false;
@@ -113,9 +115,14 @@ public class Client extends Thread {
     //TODO: finish this
     private void sendMessage(String name, String inputMessage, DataInputStream readFromListenOn, Vector clients, int clientPort) throws IOException {
         System.out.println("Debug_SendingMessage");
+        System.out.println(clients.size());
         for (Object client : clients) {
-            DataOutputStream sender = new DataOutputStream(this.socket.getOutputStream());
+            System.out.println("Debug_SendForLoopActive");
+            DataOutputStream sender = new DataOutputStream(this.socket.getOutputStream()); //this.socket might not be actually connecting to a client? Check this
+            System.out.println("Debug_WriteMessage");
             sender.writeUTF(name+" Says: "+inputMessage);
+            System.out.println();
+            System.out.println("Debug_SendingMessage");
             sender.flush();
             System.out.println("Debug_SendMessage");
         }

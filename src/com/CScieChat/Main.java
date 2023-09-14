@@ -97,6 +97,8 @@ public class Main {
         //Make new client with the socket + Input & Output streams
         Client clientThread = new Client(defaultName, clientSocket, readFromListenOn, sendFromListenOn, clients);
 
+        System.out.println("Debug_AddClientObjToVector");
+
         //add client to vector
         Main.clients.add(clientThread);
 

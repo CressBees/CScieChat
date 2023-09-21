@@ -47,35 +47,6 @@ public class Client implements Runnable {
 
         clientOutputStream = sendFromListenOn;
     }
-    //takes keyboard input from user and returns it as a string
-    private String keyboardInput(){
-        Scanner messageScanner = new Scanner(System.in); // create scanner
-        System.out.println("Input Message");
-        return messageScanner.nextLine();
-    }
-
-    //send messages to all clients
-    //TODO: finish this
-    private void sendMessage(String name, String inputMessage, DataInputStream readFromListenOn, Vector clients, int clientPort){
-        System.out.println("Debug_SendingMessage");
-        System.out.println(clients.size());
-        try{
-            for (Object client : clients) {
-                System.out.println("Debug_SendForLoopActive");
-                DataOutputStream sender = new DataOutputStream(this.socket.getOutputStream()); //this.socket might not be actually connecting to a client? Check this
-                System.out.println("Debug_WriteMessage");
-                sender.writeUTF(name + " Says: " + inputMessage);
-                System.out.println();
-                System.out.println("Debug_SendingMessage");
-                sender.flush();
-                System.out.println("Debug_FinishedClientSendLoop");
-            }
-        }
-        catch (IOException e){
-            System.out.println("Debug_ClientIOException");
-        }
-        System.out.println("Debug_BroadcastComplete");
-    }
 
     @Override
     public void run() {
@@ -92,7 +63,7 @@ public class Client implements Runnable {
         int test = 12;
 
         //says if message is a command or not
-        boolean isCommand = false;
+        boolean isCommand;
 
         // controls whether to send the message to the other clients
         // true = yes, false = no
@@ -102,6 +73,7 @@ public class Client implements Runnable {
 
         //This loop handles sending and receiving messages from each client
         while(clientActive) {
+            isCommand = false;
             isHidden = false;
             try {
                 //set input message to be the message that was sent
@@ -122,6 +94,9 @@ public class Client implements Runnable {
                 } else if (inputMessage.startsWith("!")) {
                     System.out.println("Debug_CommandReceived");
                     isCommand = true;
+                }
+                if(isCommand){
+                    commandHandler(inputMessage, clientName, isAdmin);
                 }
 
                 //send the message to other clients if it is not hidden
@@ -146,6 +121,7 @@ public class Client implements Runnable {
                 catch (Exception e){
                     System.out.println("Debug_MetaException: Abandon Hope");
                 }
+                //TODO: put a remove this client from vector here
                 break;
             }
             catch (Exception e){
@@ -154,7 +130,15 @@ public class Client implements Runnable {
             }
         }
     }
-    public void testMethod(){
-        System.out.println("Debug_TestMethodRun");
+
+    //takes keyboard input from user and returns it as a string
+    private String keyboardInput(){
+        Scanner messageScanner = new Scanner(System.in); // create scanner
+        System.out.println("Input Message");
+        return messageScanner.nextLine();
+    }
+
+    private void commandHandler(String inputMessage, String clientName, boolean isAdmin){
+        System.out.println("Debug_CommandRun");
     }
 }

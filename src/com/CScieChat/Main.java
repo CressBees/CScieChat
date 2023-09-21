@@ -73,7 +73,7 @@ public class Main {
                 createClient(defaultName, mainSocket, readFromListenOn, sendFromListenOn, clients);
 
                 //Debug
-                System.out.println("Debug_ClientsSizeEquals "+clients.size());
+                System.out.println("DebugMain_ClientsSizeEquals "+clients.size());
                 //prints the list of clients
                 printClientList();
                 // TODO: Make this loop endable
@@ -111,7 +111,7 @@ public class Main {
         clients.add(clientThread);
 
         //make the thread start working
-        clientThread.start("10");
+        clientThread.start();
     }
 
     //prints clients
@@ -119,7 +119,7 @@ public class Main {
     public static void printClientList() {
         for (int i = 0; i <= clients.size() - 1; i++) {
             //say how big clients is
-            System.out.println("Debug_clientsSize=" + clients.size());
+            System.out.println("DebugPCL_clientsSize=" + clients.size());
 
             //print client info
             System.out.println("client " + i);

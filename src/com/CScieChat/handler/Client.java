@@ -7,7 +7,7 @@ import java.net.SocketException;
 import java.util.Scanner;
 import java.util.Vector;
 
-public class Client extends Thread {
+public class Client implements Runnable {
 
     public Socket socket;
 
@@ -113,19 +113,38 @@ public class Client extends Thread {
 
     //send messages to all clients
     //TODO: finish this
-    private void sendMessage(String name, String inputMessage, DataInputStream readFromListenOn, Vector clients, int clientPort) throws IOException {
+    private void sendMessage(String name, String inputMessage, DataInputStream readFromListenOn, Vector clients, int clientPort){
         System.out.println("Debug_SendingMessage");
         System.out.println(clients.size());
-        for (Object client : clients) {
-            System.out.println("Debug_SendForLoopActive");
-            DataOutputStream sender = new DataOutputStream(this.socket.getOutputStream()); //this.socket might not be actually connecting to a client? Check this
-            System.out.println("Debug_WriteMessage");
-            sender.writeUTF(name+" Says: "+inputMessage);
-            System.out.println();
-            System.out.println("Debug_SendingMessage");
-            sender.flush();
-            System.out.println("Debug_SendMessage");
+        try{
+            for (Object client : clients) {
+                System.out.println("Debug_SendForLoopActive");
+                DataOutputStream sender = new DataOutputStream(this.socket.getOutputStream()); //this.socket might not be actually connecting to a client? Check this
+                System.out.println("Debug_WriteMessage");
+                sender.writeUTF(name + " Says: " + inputMessage);
+                System.out.println();
+                System.out.println("Debug_SendingMessage");
+                sender.flush();
+                System.out.println("Debug_FinishedClientSendLoop");
+            }
+        }
+        catch (IOException e){
+            System.out.println("Debug_ClientIOException");
         }
         System.out.println("Debug_BroadcastComplete");
+    }
+
+    @Override
+    public void run() {
+        try{
+            System.out.println("Test");
+            testMethod();
+        }
+        catch(Exception exception){
+            System.out.println("Debug_RunnableCatch");
+        }
+    }
+    public void testMethod(){
+        System.out.println("Debug_TestMethodRun");
     }
 }

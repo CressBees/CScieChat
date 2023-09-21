@@ -17,6 +17,7 @@ import java.util.*;
 // Internal
 import com.CScieChat.handler.Client;
 //import com.CScieChat.handler.Message;
+import com.CScieChat.handler.MessageHandler;
 import com.CScieChat.task.DataBase;
 import com.CScieChat.task.ServerIP;
 
@@ -50,6 +51,8 @@ public class Main {
             ServerSocket listenOn = new ServerSocket(26695);
             System.out.println("Server Started...");
             System.out.println("Waiting for Clients...");
+
+            createMessageHandler(clients);
             // While the server has not been closed
             while(!serverClosed) {
                 // Open the connection
@@ -88,6 +91,11 @@ public class Main {
     //returns client ip of socket
     private static String getClientIP(Socket socket){ // feed the socket into the method
          return socket.getRemoteSocketAddress().toString().replace("/", "");
+    }
+
+    private static void createMessageHandler(Vector clients){
+        System.out.println("Creating Message Handler");
+        Thread messageHandler = new Thread(new MessageHandler());
     }
 
     //Make a new thread with a client

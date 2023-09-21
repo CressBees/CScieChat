@@ -9,7 +9,17 @@ import java.util.Vector;
 
 public class Client implements Runnable {
 
+    //name of this client
+    String clientName;
+
+    //socket of this client
     public Socket socket;
+
+    //what this client is receivng from it's associated client
+    DataInputStream clientInputStream;
+
+    //what this client is sending
+    DataOutputStream clientOutputStream;
 
     // if client is active, it is true, when stop command, false
     boolean clientActive;
@@ -25,84 +35,17 @@ public class Client implements Runnable {
     String inputMessage = null;
     String outputMessage = null;
 
+    //assign variables for run
     public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn, Vector clients) throws IOException {
 
-        // if client is active, it is true, when stop command, false
-        boolean clientActive = true;
-
-        //is this client an admin
-        boolean isAdmin = false;
-
-        //client receiving port number
-        //there should be a better way to do this with finals, but it works for now
-        int clientPort = 0;
-
-        //Input is message server receives from client, output is one it sends to other clients
-        String inputMessage = null;
-        String outputMessage = null;
+        clientName = name;
 
         //Create socket in client
         socket = clientSocket;
 
-        int test = 12;
+        clientInputStream = readFromListenOn;
 
-        //says if message is a command or not
-        boolean isCommand = false;
-
-        // controls whether to send the message to the other clients
-        // true = yes, false = no
-        boolean isHidden;
-
-        System.out.println("Debug_ClientRunning");
-
-        //This loop handles sending and receiving messages from each client
-        while(clientActive) {
-            isHidden = false;
-            try {
-                //set input message to be the message that was sent
-                inputMessage = readFromListenOn.readUTF();
-
-                //print message
-                System.out.println("Debug_MessageReceived");
-                System.out.println(inputMessage);
-
-
-                //right now I'm just doing commands here, this is a bad way of doing it, but it will work for now
-                //if the message starts with a "/", don't send it to the other clients
-                if(inputMessage.startsWith("/")){
-                    System.out.println("Debug_CommandReceived");
-                    System.out.println("Debug_MessageHidden");
-                    isHidden = true;
-                    isCommand = true;
-                } else if (inputMessage.startsWith("!")) {
-                    System.out.println("Debug_CommandReceived");
-                    isCommand = true;
-                }
-
-                //send the message to other clients if it is not hidden
-                if (!isHidden) {
-                    sendMessage(name, inputMessage, readFromListenOn, clients, clientPort);
-                }
-
-            } catch (EOFException eofe) {
-                System.out.println("Debug_ClientMessageEOFE");
-                //if you don't break here, it will just keep looping
-                //TODO: find better way to do this
-                break;
-            }
-            //if client unexpectedly disconnected, close
-            catch (SocketException se){
-                System.out.println("Debug_ClientDisconnectError");
-                socket.close();
-                readFromListenOn.close();
-                sendFromListenOn.close();
-                break;
-            }
-            catch (Exception e){
-                System.out.println("Debug_ClientMessageError");
-                System.out.println(e);
-            }
-        }
+        clientOutputStream = sendFromListenOn;
     }
     //takes keyboard input from user and returns it as a string
     private String keyboardInput(){
@@ -136,12 +79,79 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
-        try{
-            System.out.println("Test");
-            testMethod();
-        }
-        catch(Exception exception){
-            System.out.println("Debug_RunnableCatch");
+        // if client is active, it is true, when stop command, false
+        boolean clientActive = true;
+
+        //is this client an admin
+        boolean isAdmin = false;
+
+        //client receiving port number
+        //there should be a better way to do this with finals, but it works for now
+        int clientPort = 0;
+
+        int test = 12;
+
+        //says if message is a command or not
+        boolean isCommand = false;
+
+        // controls whether to send the message to the other clients
+        // true = yes, false = no
+        boolean isHidden;
+
+        System.out.println("Debug_ClientRunning");
+
+        //This loop handles sending and receiving messages from each client
+        while(clientActive) {
+            isHidden = false;
+            try {
+                //set input message to be the message that was sent
+                inputMessage = clientInputStream.readUTF();
+
+                //print message
+                System.out.println("Debug_MessageReceived");
+                System.out.println(inputMessage);
+
+
+                //right now I'm just doing commands here, this is a bad way of doing it, but it will work for now
+                //if the message starts with a "/", don't send it to the other clients
+                if(inputMessage.startsWith("/")){
+                    System.out.println("Debug_CommandReceived");
+                    System.out.println("Debug_MessageHidden");
+                    isHidden = true;
+                    isCommand = true;
+                } else if (inputMessage.startsWith("!")) {
+                    System.out.println("Debug_CommandReceived");
+                    isCommand = true;
+                }
+
+                //send the message to other clients if it is not hidden
+                if (!isHidden) {
+                    MessageHandler.sendMessage(clientName, inputMessage);
+                }
+
+            } catch (EOFException eofe) {
+                System.out.println("Debug_ClientMessageEOFE");
+                //if you don't break here, it will just keep looping
+                //TODO: find better way to do this
+                break;
+            }
+            //if client unexpectedly disconnected, close
+            catch (SocketException se){
+                System.out.println("Debug_ClientDisconnectError");
+                try {
+                    socket.close();
+                    clientInputStream.close();
+                    clientOutputStream.close();
+                }
+                catch (Exception e){
+                    System.out.println("Debug_MetaException: Abandon Hope");
+                }
+                break;
+            }
+            catch (Exception e){
+                System.out.println("Debug_ClientMessageError");
+                System.out.println(e);
+            }
         }
     }
     public void testMethod(){

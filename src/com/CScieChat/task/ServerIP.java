@@ -1,7 +1,5 @@
 package com.CScieChat.task;
 
-import com.CScieChat.Main;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
@@ -25,8 +23,8 @@ public class ServerIP {
         } catch (UnknownHostException e) {
             //
             if(privateIpShown) {
-                Logger logger = Logger.getLogger(Main.class.getName());
-                logger.log(Level.WARNING, "Your public IP could not be determined, there are multiple reasons why this could happen.\n1. You are offline\n2. The server we request to is offline\n3. Some of your network settings could be causing issues\n4. Your IP may be blocked by the server we request to.\nEven though your public IP could not be determined the server will still run.\nThis just means you won't be able to connect outside of your network (or device).");
+                //Logger logger = Logger.getLogger(Main.class.getName());
+                //logger.log(Level.WARNING, "Your public IP could not be determined, there are multiple reasons why this could happen.\n1. You are offline\n2. The server we request to is offline\n3. Some of your network settings could be causing issues\n4. Your IP may be blocked by the server we request to.\nEven though your public IP could not be determined the server will still run.\nThis just means you won't be able to connect outside of your network (or device).");
             } else {
                 throw new RuntimeException(e); // This prints the error then exits the program, this is what I want, as if the private IP can't be found something is very wrong.
             }

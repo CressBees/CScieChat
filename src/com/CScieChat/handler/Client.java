@@ -5,7 +5,6 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Scanner;
-import java.util.Vector;
 
 public class Client implements Runnable {
 
@@ -13,9 +12,9 @@ public class Client implements Runnable {
     String clientName;
 
     //socket of this client
-    public Socket socket;
+    public Socket socket = null;
 
-    //what this client is receivng from it's associated client
+    //what this client is receiving from it's associated client
     DataInputStream clientInputStream;
 
     //what this client is sending
@@ -36,7 +35,7 @@ public class Client implements Runnable {
     String outputMessage = null;
 
     //assign variables for run
-    public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn, Vector clients) throws IOException {
+    public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn) throws IOException {
 
         clientName = name;
 

@@ -1,5 +1,4 @@
-package com.CScieChat;
-/*
+package com.CScieChat;/*
  * @authors: Seb White, Benji Cresswell
  * @year: 2023
  * This is the main class of the project.
@@ -12,7 +11,6 @@ import java.net.*; // Sockets
 // SQL
 
 // Util
-import java.util.*;
 
 // Internal
 import com.CScieChat.handler.Client;
@@ -21,11 +19,13 @@ import com.CScieChat.handler.MessageHandler;
 import com.CScieChat.task.DataBase;
 import com.CScieChat.task.ServerIP;
 
+import static com.CScieChat.handler.MessageHandler.*;
+
 
 public class Main {
 
     //Is vector instead of arraylist because vectors are threadsafe
-    public static Vector<Thread> clients = new Vector<>();
+    //public static Vector<Thread> clients = new Vector<>();
 
     //Default name for clients
     static final String defaultName = "Anonymous";
@@ -52,7 +52,9 @@ public class Main {
             System.out.println("Server Started...");
             System.out.println("Waiting for Clients...");
 
-            createMessageHandler(clients);
+            //make a message handler thread, sends messages to clients
+            createMessageHandler();
+
             // While the server has not been closed
             while(!serverClosed) {
                 // Open the connection
@@ -70,7 +72,7 @@ public class Main {
 
 
                 //make a new client, default name is Anonymous
-                createClient(defaultName, mainSocket, readFromListenOn, sendFromListenOn, clients);
+                createClient(mainSocket, readFromListenOn, sendFromListenOn);
 
                 //Debug
                 System.out.println("DebugMain_ClientsSizeEquals "+clients.size());
@@ -93,22 +95,29 @@ public class Main {
          return socket.getRemoteSocketAddress().toString().replace("/", "");
     }
 
-    private static void createMessageHandler(Vector clients){
+    private static void createMessageHandler(){
         System.out.println("Creating Message Handler");
         Thread messageHandler = new Thread(new MessageHandler());
     }
 
     //Make a new thread with a client
-    private static void createClient(String defaultName, Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn, Vector<Thread> clients) throws IOException {
+    private static void createClient(Socket clientSocket, DataInputStream readFromListenOn, DataOutputStream sendFromListenOn) throws IOException {
         System.out.println("Creating new client");
 
         //Make new client with the socket + Input & Output streams
-        Thread clientThread = new Thread(new Client(defaultName, clientSocket, readFromListenOn, sendFromListenOn, clients));
+        Thread clientThread = new Thread(new Client(Main.defaultName, clientSocket, readFromListenOn, sendFromListenOn));
 
         System.out.println("Debug_AddClientObjToVector");
 
         //add client to vector
         clients.add(clientThread);
+
+        //Map the created client with the socket the client was created with
+        //I will now complain about threads. For some reason, if you create an object
+        //and then make it run in a thread, you can't access the local variables in that object
+        //which is why I have to do this vector + map nonsense, instead of just a simple method call.
+        //Figuring all this out took months of project time, I am somewhat annoyed.
+        clientMap.put(clientThread, clientSocket);
 
         //make the thread start working
         clientThread.start();

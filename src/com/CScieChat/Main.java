@@ -78,7 +78,6 @@ public class Main {
                 System.out.println("DebugMain_ClientsSizeEquals "+clients.size());
                 //prints the list of clients
                 printClientList();
-                // TODO: Make this loop endable
             }
             System.out.println("closing server");
             // Close the server

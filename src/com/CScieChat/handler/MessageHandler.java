@@ -19,14 +19,13 @@ public class MessageHandler implements Runnable{
     }
 
     //send messages to all clients
-    //TODO: finish this
     public static void sendMessage(String name, String inputMessage){
         System.out.println("Debug_SendingMessage");
+        System.out.println("Debug_MessageEquals "+inputMessage);
         System.out.println("DebugMH_clientsSize="+clients.size());
         try{
             for (Thread client: clients) {
                 System.out.println("Debug_SendForLoopActive");
-                //this.socket might not be actually connecting to a client? Check this
                 DataOutputStream sender = new DataOutputStream(clientMap.get(client).getOutputStream());
                 System.out.println("Debug_WriteMessage");
                 sender.writeUTF(name + " Says: " + inputMessage);

@@ -1,8 +1,6 @@
 package com.CScieChat.task;
 
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class DataBase {
     public void setup() {

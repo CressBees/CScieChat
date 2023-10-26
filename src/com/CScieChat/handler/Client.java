@@ -1,18 +1,29 @@
 package com.CScieChat.handler;
 
+import com.CScieChat.Main;
+
 import java.io.*;
 
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.Scanner;
+
+import static com.CScieChat.handler.MessageHandler.clientMap;
+import static com.CScieChat.handler.MessageHandler.clients;
 
 public class Client implements Runnable {
 
+    //how long client names are allowed to be
+    final int lengthAllowed = 20;
+
+    //assign variables for run
     //name of this client
     String clientName;
 
     //socket of this client
-    public Socket socket = null;
+    public Socket socket;
 
     //what this client is receiving from it's associated client
     DataInputStream clientInputStream;
@@ -34,7 +45,9 @@ public class Client implements Runnable {
     String inputMessage = null;
     String outputMessage = null;
 
-    //assign variables for run
+    //This determines what signifiers are used for marking commands, right now, if you use ! as the marker, it will be publicly displayed, but / will hide
+    final String[] commandMarkers = {"!","/"};
+
     public Client(String name, final Socket clientSocket, final DataInputStream readFromListenOn, final DataOutputStream sendFromListenOn) throws IOException {
 
         clientName = name;
@@ -45,6 +58,7 @@ public class Client implements Runnable {
         clientInputStream = readFromListenOn;
 
         clientOutputStream = sendFromListenOn;
+
     }
 
     @Override
@@ -68,6 +82,9 @@ public class Client implements Runnable {
         // true = yes, false = no
         boolean isHidden;
 
+        //checks if initial message has been gotten, to avoid duplicates
+        boolean initialMessageReceived = false;
+
         System.out.println("Debug_ClientRunning");
 
         //This loop handles sending and receiving messages from each client
@@ -85,15 +102,27 @@ public class Client implements Runnable {
 
                 //right now I'm just doing commands here, this is a bad way of doing it, but it will work for now
                 //if the message starts with a "/", don't send it to the other clients
-                if(inputMessage.startsWith("/")){
+                if(inputMessage.startsWith("!")||inputMessage.startsWith("/")){
                     System.out.println("Debug_CommandReceived");
                     System.out.println("Debug_MessageHidden");
-                    isHidden = true;
                     isCommand = true;
-                } else if (inputMessage.startsWith("!")) {
-                    System.out.println("Debug_CommandReceived");
-                    isCommand = true;
+
+                    //if command starts with a /, don't broadcast it.
+                    if(inputMessage.startsWith("/")){isHidden = true;}
+
+                    //if it's the initial message, change name to name
+                    if (inputMessage.startsWith("/initial")&& !initialMessageReceived){
+                        initialMessageReceived = true;
+                        clientName = inputMessage.replaceFirst("/initial:","");
+
+                        //if the client name is too long, trim it down
+                        clientName = clientName.substring(0, Math.min(clientName.length(), lengthAllowed));
+                    } else if (inputMessage.startsWith("!exit")||inputMessage.startsWith("/exit")) {
+                        clientActive = false;
+                    }
                 }
+
+                //if it's a command, send it to the command handler
                 if(isCommand){
                     commandHandler(inputMessage, clientName, isAdmin);
                 }
@@ -113,9 +142,11 @@ public class Client implements Runnable {
             catch (SocketException se){
                 System.out.println("Debug_ClientDisconnectError");
                 try {
-                    socket.close();
                     clientInputStream.close();
                     clientOutputStream.close();
+                    socket.close();
+                    clients.remove(Thread.currentThread());
+                    clientMap.remove(Thread.currentThread());
                 }
                 catch (Exception e){
                     System.out.println("Debug_MetaException: Abandon Hope");
@@ -139,5 +170,9 @@ public class Client implements Runnable {
 
     private void commandHandler(String inputMessage, String clientName, boolean isAdmin){
         System.out.println("Debug_CommandRun");
+        String command;
+        //remove the command signifier
+        if(inputMessage.startsWith("!")){command = inputMessage.replaceFirst("!","");}
+        else {command = inputMessage.replaceFirst("/","");}
     }
 }

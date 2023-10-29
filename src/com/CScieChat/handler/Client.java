@@ -10,8 +10,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
 
-import static com.CScieChat.handler.MessageHandler.clientMap;
-import static com.CScieChat.handler.MessageHandler.clients;
+import static com.CScieChat.handler.MessageHandler.*;
 
 public class Client implements Runnable {
 
@@ -111,14 +110,24 @@ public class Client implements Runnable {
                     if(inputMessage.startsWith("/")){isHidden = true;}
 
                     //if it's the initial message, change name to name
+                    //have initial message received on serverside so clients can't spoof to change name or do any other malicious things
                     if (inputMessage.startsWith("/initial")&& !initialMessageReceived){
                         initialMessageReceived = true;
                         clientName = inputMessage.replaceFirst("/initial:","");
 
                         //if the client name is too long, trim it down
                         clientName = clientName.substring(0, Math.min(clientName.length(), lengthAllowed));
+
+                        //tell MessageHandler to send all past messages to this client
+                        sendPastMessages(Thread.currentThread());
+
                     } else if (inputMessage.startsWith("!exit")||inputMessage.startsWith("/exit")) {
-                        clientActive = false;
+                        //close this client
+                        clientInputStream.close();
+                        clientOutputStream.close();
+                        socket.close();
+                        clients.remove(Thread.currentThread());
+                        clientMap.remove(Thread.currentThread());
                     }
                 }
 
@@ -142,6 +151,7 @@ public class Client implements Runnable {
             catch (SocketException se){
                 System.out.println("Debug_ClientDisconnectError");
                 try {
+                    //close the client
                     clientInputStream.close();
                     clientOutputStream.close();
                     socket.close();

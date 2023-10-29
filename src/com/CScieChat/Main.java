@@ -33,9 +33,6 @@ public class Main {
     public static void main(String[] args) {
         DataBase dataBase = new DataBase();
 
-        for (String arg : args) {
-            System.out.println(arg);
-        }
         boolean serverClosed = false;
 
         // Setup SQL
@@ -70,9 +67,10 @@ public class Main {
                 DataInputStream readFromListenOn = new DataInputStream(mainSocket.getInputStream());
                 DataOutputStream sendFromListenOn = new DataOutputStream(mainSocket.getOutputStream());
 
-
-                //make a new client, default name is Anonymous
-                createClient(mainSocket, readFromListenOn, sendFromListenOn);
+                if(clients.size()< clients.capacity()) {
+                    //make a new client, default name is Anonymous
+                    createClient(mainSocket, readFromListenOn, sendFromListenOn);
+                }
 
                 //Debug
                 System.out.println("DebugMain_ClientsSizeEquals "+clients.size());
